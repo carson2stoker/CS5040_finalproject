@@ -2,10 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import os
 
-start_link = 69
+start_link = 1
+minimize_scalar = 10
 
 # URL of the website to scrape
-url = 'https://oceans11.lanl.gov/deepwaterimpact/yC11_300x300x300-FourScalars_resolution.html'
+url = 'https://oceans11.lanl.gov/deepwaterimpact/yA31_300x300x300-AllScalars_resolution.html'
 
 # Make a request to the URL and get the HTML content
 response = requests.get(url)
@@ -15,8 +16,20 @@ html_content = response.content
 soup = BeautifulSoup(html_content, 'html.parser')
 
 # Find all the links on the webpage
-links = soup.find_all('a')
+all_links = soup.find_all('a')
+
+file_counter = 0
+links = []
+for link_index in range(len(all_links)):
+    if file_counter == 0:
+        links.append(all_links[link_index])
+    if file_counter == minimize_scalar - 1:
+        file_counter = 0
+    else:
+        file_counter += 1
+
 links = links[start_link:len(links) - 1]
+
 
 file_number = start_link
 
@@ -30,7 +43,7 @@ for link in links:
     link_html_content = link_response.content
     
     # Save the HTML content to a file with a .vtk extension
-    file_name = os.getcwd() + '\\data\\' + link_url.split('/')[-1]
+    file_name = os.getcwd() + '\\data_scalar_partial\\' + link_url.split('/')[-1]
     with open(file_name, 'wb') as f:
         f.write(link_html_content)
         file_number += 1
