@@ -30,7 +30,7 @@ def get_data(url, start=0, scalar=0, path=-1):
     all_links = soup.find_all('a')
 
     # Remove the first and last link (they don't have data)
-    links = links[1:len(links) - 1]
+    all_links = all_links[1:len(all_links) - 1]
 
     # Apply scalar
     if scalar != 0:
