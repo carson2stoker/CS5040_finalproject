@@ -4,7 +4,9 @@ import os
 
 def get_data(url, start=0, scalar=0, path=-1):
     if path == -1:
-        path = os.getcwd() + '\\' + url.split('/')[-1].split('_')[0]
+        path = os.getcwd()
+    
+    path += + '\\' + url.split('/')[-1].split('_')[0]
 
     if scalar != 0:
         path += f"_sc{scalar}"
@@ -13,7 +15,7 @@ def get_data(url, start=0, scalar=0, path=-1):
     try:
         os.mkdir(path)
     except FileExistsError:
-        print("File already exists")
+        print("Folder already exists")
     else:
         print(f"Folder created at {path}")
     print(f"Data will be located here: {path}")
@@ -30,7 +32,7 @@ def get_data(url, start=0, scalar=0, path=-1):
     all_links = soup.find_all('a')
 
     # Remove the first and last link (they don't have data)
-    all_links = all_links[1:len(all_links) - 1]
+    all_links = all_links[1:len(all_links) - 2]
 
     # Apply scalar
     if scalar != 0:
@@ -43,6 +45,8 @@ def get_data(url, start=0, scalar=0, path=-1):
                 file_counter = 0
             else:
                 file_counter += 1
+
+    links = links[start:]
 
     file_number = start
     for link in links:
@@ -62,5 +66,5 @@ def get_data(url, start=0, scalar=0, path=-1):
             print(f'File {str(file_number)} of {len(links) + start} written to: {file_name}')
 
 if __name__ == "__main__":
-    url = 'https://oceans11.lanl.gov/deepwaterimpact/yA31_300x300x300-AllScalars_resolution.html'
-    get_data(url, scalar=2)
+    url = 'https://oceans11.lanl.gov/deepwaterimpact/yB31_460x280x240-AllScalars.html'
+    get_data(url, scalar=2, start=127, path='A:\School\SciFiVis\data')
